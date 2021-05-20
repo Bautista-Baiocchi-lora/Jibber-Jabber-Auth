@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserFactory {
     public User createUser(CreateUserDto createUserDto){
-        return new User(null, createUserDto.getPassword(), createUserDto.getUsername(), createUserDto.getName(), createUserDto.getLastname(), createUserDto.getBirthdate(), createUserDto.getMail());
+        return new User(null, createUserDto.getPassword(), createUserDto.getUsername(), createUserDto.getName(), createUserDto.getLastname(), createUserDto.getMail());
     }
 }

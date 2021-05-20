@@ -21,7 +21,6 @@ public class User {
     private String username;
     private String name;
     private String lastname;
-    private Date birthdate;
     private String mail;
 
     public UserDto toDto(){
@@ -30,7 +29,6 @@ public class User {
                 username,
                 name,
                 lastname,
-                birthdate,
                 mail
         );
     }
