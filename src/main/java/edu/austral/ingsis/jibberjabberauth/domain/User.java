@@ -1,5 +1,6 @@
 package edu.austral.ingsis.jibberjabberauth.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.austral.ingsis.jibberjabberauth.domain.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+    @JsonIgnore
     private String password;
     private String username;
     private String name;
