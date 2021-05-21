@@ -9,26 +9,25 @@ import edu.austral.ingsis.jibberjabberauth.exceptions.NotFoundException;
 import edu.austral.ingsis.jibberjabberauth.factories.UserFactory;
 import edu.austral.ingsis.jibberjabberauth.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository repository;
     private final UserFactory factory;
 
     @Autowired
+    private PasswordEncoder bcryptEncoder;
+
+    @Autowired
     public UserService(UserRepository userRepository, UserFactory factory) {
         this.repository = userRepository;
         this.factory = factory;
-    }
-
-    public UserDto login(LoginDto loginDto) {
-        User user = repository.findById(loginDto.getUsername()).orElseThrow(() -> new NotFoundException("User does not found"));
-        if (user.getPassword().equals(loginDto.getPassword())){
-            return user.toDto();
-        }
-        throw new InvalidRequest("Wrong email or password");
     }
 
     public UserDto getUserById(String id) {
@@ -38,13 +37,24 @@ public class UserService {
                 .toDto();
     }
 
-
     public UserDto save(CreateUserDto userDto) {
-        return repository.save(factory.createUser(userDto)).toDto();
+        final User user = factory.createUser(userDto);
+        user.setPassword(bcryptEncoder.encode(user.getPassword()));
+        return repository.save(user).toDto();
     }
 
     public Boolean delete(String id) {
         repository.deleteById(id);
         return !repository.existsById(id);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        final User user = repository.findByUsername(username);
+
+        if(user == null){
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+        return user;
     }
 }
