@@ -6,10 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
-@Table(name = "user")
+@Table(name = "\"User\"")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
