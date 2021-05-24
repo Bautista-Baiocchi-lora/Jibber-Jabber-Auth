@@ -3,6 +3,7 @@ package edu.austral.ingsis.jibberjabberauth.controllers;
 import javax.validation.Valid;
 
 import edu.austral.ingsis.jibberjabberauth.domain.dto.CreateUserDto;
+import edu.austral.ingsis.jibberjabberauth.domain.dto.JwtDto;
 import edu.austral.ingsis.jibberjabberauth.domain.dto.LoginDto;
 import edu.austral.ingsis.jibberjabberauth.domain.dto.JJUserDto;
 import edu.austral.ingsis.jibberjabberauth.security.JwtResponse;
@@ -47,8 +48,8 @@ public class AuthController {
     }
 
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<JwtResponse> createJwtToken(@RequestBody @Valid LoginDto loginDto) throws Exception {
+    @PostMapping("/login")
+    public ResponseEntity<JwtResponse> login(@RequestBody @Valid LoginDto loginDto) throws Exception {
         authenticate(loginDto.getUsername(), loginDto.getPassword());
 
        final UserDetails userDetails = this.userService.loadUserByUsername(loginDto.getUsername());
@@ -56,6 +57,11 @@ public class AuthController {
        final String token = jwtTokenUtil.generateToken(userDetails);
 
        return ResponseEntity.ok(new JwtResponse(token));
+    }
+
+    @GetMapping("/authenticate")
+    public ResponseEntity<Boolean> authenticateJwt(){
+        return ResponseEntity.ok(true);
     }
 
     @GetMapping("/{id}")

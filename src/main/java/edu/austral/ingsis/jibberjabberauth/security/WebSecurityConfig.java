@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/user/save", "/user/authenticate");
+        web.ignoring().antMatchers("/user/save", "/user/login");
     }
 
     @Override
@@ -60,7 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .csrf().disable()
                 // dont authenticate this particular request
-                .authorizeRequests().antMatchers("/user/authenticate","/user/save").permitAll().
+                .authorizeRequests().antMatchers("/user/login","/user/save").permitAll().
                 // all other requests need to be authenticated
                         anyRequest().authenticated().and().
                 // make sure we use stateless session; session won't be used to
