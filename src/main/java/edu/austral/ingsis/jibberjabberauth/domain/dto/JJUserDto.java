@@ -10,8 +10,8 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
-    private String id;
+public class JJUserDto {
+    private Long id;
     private String username;
     private String name;
     private String lastname;

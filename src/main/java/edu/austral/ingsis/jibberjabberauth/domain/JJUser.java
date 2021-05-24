@@ -1,7 +1,7 @@
 package edu.austral.ingsis.jibberjabberauth.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import edu.austral.ingsis.jibberjabberauth.domain.dto.UserDto;
+import edu.austral.ingsis.jibberjabberauth.domain.dto.JJUserDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,33 +14,33 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @Entity
-@Table(name = "\"User\"")
+@Table(name = "jj_user")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserDetails {
+public class JJUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     @JsonIgnore
-    @NotBlank
+    @Column(updatable = true, insertable = true)
     private String password;
 
-    @NotBlank
+    @Column(updatable = true, insertable = true, unique = true)
     private String username;
 
-    @NotBlank
+    @Column(updatable = false)
     private String name;
 
-    @NotBlank
+    @Column(updatable = false)
     private String lastname;
 
-    @NotBlank
+    @Column(updatable = true, insertable = true, unique = true)
     private String mail;
 
-    public UserDto toDto(){
-        return new UserDto(
+    public JJUserDto toDto(){
+        return new JJUserDto(
                 id,
                 username,
                 name,
@@ -61,7 +61,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override

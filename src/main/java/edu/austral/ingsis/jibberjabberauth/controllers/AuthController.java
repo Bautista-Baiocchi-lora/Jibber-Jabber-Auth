@@ -4,7 +4,7 @@ import javax.validation.Valid;
 
 import edu.austral.ingsis.jibberjabberauth.domain.dto.CreateUserDto;
 import edu.austral.ingsis.jibberjabberauth.domain.dto.LoginDto;
-import edu.austral.ingsis.jibberjabberauth.domain.dto.UserDto;
+import edu.austral.ingsis.jibberjabberauth.domain.dto.JJUserDto;
 import edu.austral.ingsis.jibberjabberauth.security.JwtResponse;
 import edu.austral.ingsis.jibberjabberauth.security.JwtTokenUtil;
 import edu.austral.ingsis.jibberjabberauth.services.UserService;
@@ -59,17 +59,17 @@ public class AuthController {
     }
 
     @GetMapping("/{id}")
-    public UserDto getById(@PathVariable String id){
+    public JJUserDto getById(@PathVariable Long id){
         return userService.getUserById(id);
     }
 
     @PostMapping("/save")
-    public UserDto save(@RequestBody @Valid CreateUserDto userDto){
+    public JJUserDto save(@RequestBody @Valid CreateUserDto userDto){
         return userService.save(userDto);
     }
 
     @DeleteMapping("/delete/{id}")
-    public Boolean delete(@PathVariable @Valid String id){
+    public Boolean delete(@PathVariable @Valid Long id){
         return userService.delete(id);
     }
 }
