@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@CrossOrigin
 @RequestMapping("/user")
 public class AuthController {
 
@@ -69,8 +70,8 @@ public class AuthController {
         return userService.getUserById(id);
     }
 
-    @PostMapping("/save")
-    public JJUserDto save(@RequestBody @Valid CreateUserDto userDto){
+    @PostMapping("/register")
+    public JJUserDto register(@RequestBody @Valid CreateUserDto userDto){
         return userService.save(userDto);
     }
 
