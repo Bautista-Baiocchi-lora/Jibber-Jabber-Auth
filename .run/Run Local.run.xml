@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Local" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="jibber-jabber-auth.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="edu.austral.ingsis.jibberjabberauth.JibberJabberAuthApplication" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <envs>
+      <env name="POSTGRES_USER" value="admin" />
+      <env name="POSTGRES_PASSWORD" value="admin" />
+      <env name="POSTGRES_DB_HOST" value="localhost" />
+      <env name="POSTGRES_DB" value="dev" />
+    </envs>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
