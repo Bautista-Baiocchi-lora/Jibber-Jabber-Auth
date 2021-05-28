@@ -51,9 +51,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody @Valid LoginDto loginDto) throws Exception {
-        authenticate(loginDto.getUsername(), loginDto.getPassword());
+        authenticate(loginDto.getMail(), loginDto.getPassword());
 
-       final UserDetails userDetails = this.userService.loadUserByUsername(loginDto.getUsername());
+       final UserDetails userDetails = this.userService.loadUserByUsername(loginDto.getMail());
 
        final String token = jwtTokenUtil.generateToken(userDetails);
 
