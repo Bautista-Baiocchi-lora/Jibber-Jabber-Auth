@@ -99,6 +99,7 @@ public void configure(AuthenticationManagerBuilder authenticationManagerBuilder)
         repository.setSecure(true);
 
         http
+                .cors().and()
                 .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
