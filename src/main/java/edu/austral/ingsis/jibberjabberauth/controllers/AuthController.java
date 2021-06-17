@@ -1,5 +1,6 @@
 package edu.austral.ingsis.jibberjabberauth.controllers;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import edu.austral.ingsis.jibberjabberauth.domain.dto.CreateUserDto;
@@ -38,26 +39,10 @@ public class AuthController {
         this.userService = userService;
     }
 
-    private void authenticate(String username, String password) throws Exception {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
-        } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
-        }
-    }
-
-
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody @Valid LoginDto loginDto) throws Exception {
-        authenticate(loginDto.getMail(), loginDto.getPassword());
+    public ResponseEntity<Boolean> login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) throws Exception {
+        return ResponseEntity.ok(userService.login(loginDto, response));
 
-       final UserDetails userDetails = this.userService.loadUserByUsername(loginDto.getMail());
-
-       final String token = jwtTokenUtil.generateToken(userDetails);
-
-       return ResponseEntity.ok(new JwtResponse(token));
     }
 
     @GetMapping("/authenticate")
