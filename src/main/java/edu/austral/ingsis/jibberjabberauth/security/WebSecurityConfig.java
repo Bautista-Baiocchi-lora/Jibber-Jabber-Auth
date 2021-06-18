@@ -60,7 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         repository.setSecure(true);
 
         http
-                .cors().and()
+                .cors().disable()
                 .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
@@ -70,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/swagger-ui.html",
                             "/swagger-ui/**").permitAll()
                 .anyRequest().authenticated()
-                .and().headers().xssProtection();
+                .and();
 
         http.addFilterBefore(authFilter(), UsernamePasswordAuthenticationFilter.class);
     }
