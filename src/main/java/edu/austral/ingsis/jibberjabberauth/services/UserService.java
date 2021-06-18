@@ -94,7 +94,8 @@ public class UserService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = jwtTokenUtil.generateJwtToken(authentication);
-        response.addHeader("Set-Cookie", "jwt=" + token + "; HttpOnly; SameSite=strict; Path=/api; Secure");
+        //add Secure for HTTPS !!
+        response.addHeader("Set-Cookie", "jwt=" + token + "; HttpOnly; SameSite=strict; Path=/;");
         return !token.isEmpty();
     }
 }
