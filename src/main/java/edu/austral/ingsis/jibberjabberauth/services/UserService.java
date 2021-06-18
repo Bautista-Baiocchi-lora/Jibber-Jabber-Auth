@@ -88,15 +88,6 @@ public class UserService {
         return repository.findByUsername(username).orElseThrow(() -> new NotFoundException("User does not found"));
     }
 
-//    public Boolean login(LoginDto loginDto, HttpServletResponse response) throws Exception {
-//        authenticate(loginDto.getUsername(), loginDto.getPassword());
-//
-//        final UserDetails userDetails = getUserByUsername(loginDto.getUsername());
-//
-//        final String token = jwtTokenUtil.generateToken(userDetails.getUsername());
-//        response.addHeader("Set-Cookie", "jwt=" + token + "; HttpOnly; SameSite=strict; Path=/api; Secure");
-//        return !token.isEmpty();
-//    }
     public Boolean login(LoginDto loginDto, HttpServletResponse response) throws Exception {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
