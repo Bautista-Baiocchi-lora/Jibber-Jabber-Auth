@@ -13,7 +13,7 @@ import java.util.Date;
 public class JJUserDto {
     private Long id;
     private String username;
-    private String name;
+    private String firstname;
     private String lastname;
     private String email;
 }

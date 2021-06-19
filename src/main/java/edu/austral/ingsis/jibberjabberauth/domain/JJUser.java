@@ -9,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -31,7 +30,7 @@ public class JJUser implements UserDetails {
     private String username;
 
     @Column(updatable = false)
-    private String name;
+    private String firstname;
 
     @Column(updatable = false)
     private String lastname;
@@ -43,7 +42,7 @@ public class JJUser implements UserDetails {
         return new JJUserDto(
                 id,
                 username,
-                name,
+                firstname,
                 lastname,
                 mail
         );

@@ -10,7 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateUserDto {
-    private String name;
+    private String firstname;
     private String lastname;
     private String username;
     private String mail;
