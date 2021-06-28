@@ -21,23 +21,17 @@ public class AuthController {
     private UserService userService;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
     public AuthController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Boolean> login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) throws Exception {
-        return ResponseEntity.ok(userService.login(loginDto, response));
+    public JJUserDto login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
+        return userService.login(loginDto, response);
     }
 
     @PostMapping("/change-pass")
-    public Boolean changePassword(@RequestBody @Valid ChangePasswordDto changePasswordDto) throws Exception {
+    public Boolean changePassword(@RequestBody @Valid ChangePasswordDto changePasswordDto) {
         return userService.changePassword(changePasswordDto);
     }
 

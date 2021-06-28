@@ -29,9 +29,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    @Autowired
-    private JwtRequestFilter jwtRequestFilter;
-
     @Bean
     public JwtRequestFilter authFilter(){
         return new JwtRequestFilter();
