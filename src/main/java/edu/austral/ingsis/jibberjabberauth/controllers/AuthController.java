@@ -4,11 +4,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import edu.austral.ingsis.jibberjabberauth.domain.dto.*;
-import edu.austral.ingsis.jibberjabberauth.security.JwtTokenUtil;
 import edu.austral.ingsis.jibberjabberauth.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -53,5 +51,11 @@ public class AuthController {
     @DeleteMapping("/delete/{id}")
     public Boolean delete(@PathVariable @Valid Long id){
         return userService.delete(id);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Object> logout(HttpServletResponse response){
+        response.addHeader("Set-Cookie", "jwt=deleted; HttpOnly; SameSite=strict; Path=/;");
+        return ResponseEntity.noContent().build();
     }
 }
