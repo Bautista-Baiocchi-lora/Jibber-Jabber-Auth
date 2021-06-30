@@ -33,6 +33,7 @@ public class AuthController {
         return userService.changePassword(changePasswordDto);
     }
 
+
     @GetMapping("/authenticate")
     public ResponseEntity<Boolean> authenticateJwt(){
         return ResponseEntity.ok(true);
