@@ -4,11 +4,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import edu.austral.ingsis.jibberjabberauth.domain.dto.*;
-import edu.austral.ingsis.jibberjabberauth.security.JwtTokenUtil;
 import edu.austral.ingsis.jibberjabberauth.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -21,25 +19,20 @@ public class AuthController {
     private UserService userService;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
     public AuthController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Boolean> login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) throws Exception {
-        return ResponseEntity.ok(userService.login(loginDto, response));
+    public JJUserDto login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
+        return userService.login(loginDto, response);
     }
 
     @PostMapping("/change-pass")
-    public Boolean changePassword(@RequestBody @Valid ChangePasswordDto changePasswordDto) throws Exception {
+    public Boolean changePassword(@RequestBody @Valid ChangePasswordDto changePasswordDto) {
         return userService.changePassword(changePasswordDto);
     }
+
 
     @GetMapping("/authenticate")
     public ResponseEntity<Boolean> authenticateJwt(){
@@ -59,5 +52,11 @@ public class AuthController {
     @DeleteMapping("/delete/{id}")
     public Boolean delete(@PathVariable @Valid Long id){
         return userService.delete(id);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Object> logout(HttpServletResponse response){
+        response.addHeader("Set-Cookie", "jwt=deleted; HttpOnly; SameSite=strict; Path=/;");
+        return ResponseEntity.noContent().build();
     }
 }

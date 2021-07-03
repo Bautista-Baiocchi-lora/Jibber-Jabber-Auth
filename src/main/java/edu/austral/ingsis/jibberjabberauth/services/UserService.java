@@ -17,9 +17,6 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -69,6 +66,7 @@ public class UserService {
         try {
             authenticate(user.getUsername(), changePasswordDto.getOldPassword());
             user.setPassword(bcryptEncoder.encode(changePasswordDto.getNewPassword()));
+            repository.save(user);
             return true;
         } catch (Exception e){
             return false;
@@ -88,14 +86,16 @@ public class UserService {
         return repository.findByUsername(username).orElseThrow(() -> new NotFoundException("User does not found"));
     }
 
-    public Boolean login(LoginDto loginDto, HttpServletResponse response) throws Exception {
+    public JJUserDto login(LoginDto loginDto, HttpServletResponse response) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = jwtTokenUtil.generateJwtToken(authentication);
-        //add Secure for HTTPS !!
         response.addHeader("Set-Cookie", "jwt=" + token + "; HttpOnly; SameSite=strict; Path=/;");
-        return !token.isEmpty();
+        if (token.isEmpty()) throw new RuntimeException("Create token fail");
+        return getUserByUsername(loginDto.getUsername()).toDto();
     }
+
+
 }
