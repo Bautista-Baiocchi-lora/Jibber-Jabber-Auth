@@ -59,4 +59,9 @@ public class AuthController {
         response.addHeader("Set-Cookie", "jwt=deleted; HttpOnly; SameSite=strict; Path=/;");
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/status")
+    public ResponseEntity logout(){
+        return ResponseEntity.ok().build();
+    }
 }
