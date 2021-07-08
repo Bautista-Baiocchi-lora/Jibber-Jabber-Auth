@@ -92,7 +92,7 @@ public class UserService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = jwtTokenUtil.generateJwtToken(authentication);
-        response.addHeader("Set-Cookie", "jwt=" + token + "; HttpOnly; SameSite=strict; Path=/;");
+        response.addHeader("Set-Cookie", "jwt=" + token + "; HttpOnly; Secure; SameSite=strict; Path=/;");
         if (token.isEmpty()) throw new RuntimeException("Create token fail");
         return getUserByUsername(loginDto.getUsername()).toDto();
     }
