@@ -1,12 +1,14 @@
 package edu.austral.ingsis.jibberjabberauth.security;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.austral.ingsis.jibberjabberauth.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
-    private UserService jwtUserDetailsService;
+    private UserDetailsServiceImpl jwtUserDetailsService;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -36,29 +38,31 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        final String requestTokenHeader = request.getHeader("Authorization");
-        if(requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")){
-            try {
-                String jwtToken = requestTokenHeader.substring(7);
-                String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-                UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
-                if(jwtTokenUtil.validateToken(jwtToken, userDetails)){
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
+        try {
+            String jwt = parseJwt(request);
+            if (jwt != null && jwtTokenUtil.validateToken(jwt)) {
+                String username = jwtTokenUtil.getUsernameFromToken(jwt);
 
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
-            } catch (IllegalArgumentException e) {
-                logger.error("Unable to get JWT Token");
-            } catch (ExpiredJwtException e) {
-                logger.error("JWT Token has expired");
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        }else{
-            logger.debug("No Auth Token found.");
+        } catch (Exception e){
+            logger.error("Cannot set user authentication: {}");
         }
-
         chain.doFilter(request, response);
+    }
+
+    private String parseJwt(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            Optional<Cookie> jwtCookie = Arrays.stream(request.getCookies()).filter(cookie -> cookie.getName().equals("jwt")).findFirst();
+            if (jwtCookie.isPresent()) {
+                return jwtCookie.get().getValue();
+            }
+        }
+        return null;
     }
 }
